@@ -11,15 +11,28 @@ const publicFolder = path.join(__dirname, '../public')
 
 const app = express()
 
+app.set('view engine', 'hbs')
 app.use(express.static(publicFolder))
 
-// app.get('/help', (req, res)=>{
-//   res.sendFile(path.join(publicFolder, 'help.html'))
-// })
+app.get('', (req, res)=>{
+  res.render('index', {
+    title: 'Weather App',
+    name: 'Jon Ahn'
+  })
+})
+app.get('/help', (req, res)=>{
+  res.render('help', {
+    title: 'Need Help?',
+    name: 'Jon Ahn'
+  })
+})
 
-// app.get('/about', (req, res)=>{
-//   res.sendFile(path.join(publicFolder, 'about.html'))
-// })
+app.get('/about', (req, res)=>{
+  res.render('about', {
+    title: 'About Me',
+    name: 'Jon Ahn'
+  })
+})
 
 app.get('/weather', (req, res)=>{
   const address = "Daegu"

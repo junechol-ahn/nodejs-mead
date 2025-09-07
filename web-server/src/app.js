@@ -1,18 +1,28 @@
-import express from 'express'
 import forecast from '../../weather-app/utils/forecast.js'
 import geocode from '../../weather-app/utils/geocode.js'
 
 import path from 'path';
+import express from 'express'
+import hbs from 'hbs'
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const publicFolder = path.join(__dirname, '../public')
 
 const app = express()
 
+// Define paths for Express config
+const publicPath = path.join(__dirname, '../public')
+const viewsPath = path.join(__dirname, '../templates/views')
+const partialsPath = path.join(__dirname, '../templates/partials')
+
+// Setup handlebars engine and views location
 app.set('view engine', 'hbs')
-app.use(express.static(publicFolder))
+app.set('views', viewsPath)
+hbs.registerPartials(partialsPath)
+
+// Setup static directory to serve
+app.use(express.static(publicPath))
 
 app.get('', (req, res)=>{
   res.render('index', {
@@ -23,6 +33,7 @@ app.get('', (req, res)=>{
 app.get('/help', (req, res)=>{
   res.render('help', {
     title: 'Need Help?',
+    helpText: 'This is some helpful text.',
     name: 'Jon Ahn'
   })
 })
@@ -63,5 +74,5 @@ app.get('/weather', (req, res)=>{
 })
 
 app.listen(3000, ()=>{
-  console.log('Server is up on port 3000.')
+  console.log('Server is up on http://localhost:3000')
 })

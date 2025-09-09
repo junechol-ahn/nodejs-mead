@@ -1,5 +1,5 @@
-import forecast from "../../weather-app/utils/forecast.js";
-import geocode from "../../weather-app/utils/geocode.js";
+import forecast from "./utils/forecast.js";
+import geocode from "./utils/geocode.js";
 
 import path from "path";
 import express from "express";
@@ -46,32 +46,50 @@ app.get("/about", (req, res) => {
 });
 
 app.get("/weather", (req, res) => {
-  const address = "Daegu";
+  const address = req.query.address
 
-  geocode(address, (error, { latitude, longitude }) => {
+  // if (!address) {
+  //   return res.send({
+  //     error: 'You must provide address'
+  //   })
+  // }
+
+  geocode(address, (error, { latitude, longitude }={}) => {
     if (error) {
-      res.send("<h1>Error: cannot get coordinates</h1>");
-      console.log(error);
-      return;
+      // return res.send("<h1>Error: cannot get coordinates</h1>");
+      return res.send({"error": "cannot get coordinates"});
     }
 
-    forecast(latitude, longitude, (error, { city, time, temp, feel }) => {
+    forecast(latitude, longitude, (error, { city, time, temp, feel }={}) => {
       if (error) {
-        res.send("<h1>Error: cannot get forecast</h1>");
-        console.log(error);
-        return;
+        // return res.send("<h1>Error: cannot get forecast</h1>");
+        return res.send({"error": "cannot get forecast"});
       }
 
-      const msg = `<h2>${city} at ${time}</h2>
-      <p>It is currently ${temp} degrees outside, and feels like ${feel} degrees.</p>`;
+      res.send({
+        'city': city,
+        'time': time,
+        'temp': temp,
+        'feel': feel
+      })
+      // const msg = `<h2>${city} at ${time}</h2>
+      // <p>It is currently ${temp} degrees outside, and feels like ${feel} degrees.</p>`;
 
-      console.log(msg);
-      res.send(msg);
+      // console.log(msg);
+      // res.send(msg);
     });
   });
-
-  // res.send('Weather page')
 });
+
+app.get('/products', (req, res)=>{
+  if (!req.query.search) {
+    return res.send({
+      error: 'You must provide a search term'
+    })
+  } 
+  console.log(req.query.search)
+  res.send({'products':[]})
+})
 
 app.get('/help/*aa', (req, res) => {
   res.render('404', {

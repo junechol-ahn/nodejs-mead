@@ -1,7 +1,7 @@
 console.log('client side javascript file loaded')
 
 const getweather = async (location) => {
-    const response = await fetch(`https://psychic-chainsaw-54wv7jq77vjf4xx-3000.app.github.dev/weather?address=${location}`)
+    const response = await fetch(`https://nodejs-mead.vercel.app/weather?address=${location}`)
     const data = await response.json()
     return data
     // if (data.error){
